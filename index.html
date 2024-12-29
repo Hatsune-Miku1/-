@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>數學小測驗：三角形與四邊形</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background-color: #4CAF50; /* 綠色 */
+            color: white;
+        }
+        .next-btn {
+            background-color: #2196F3; /* 藍色 */
+            color: white;
+        }
+        .exit-btn {
+            background-color: #f44336; /* 紅色 */
+            color: white;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .question {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>數學小測驗：三角形與四邊形</h1>
+    <div id="quiz-container">
+        <div class="question" id="question"></div>
+        <input type="number" id="answer" placeholder="輸入你的答案" />
+        <div class="button-container">
+            <button class="submit-btn" onclick="checkAnswer()">提交</button>
+            <button class="next-btn" onclick="nextQuestion()">下一題</button>
+            <button class="exit-btn" onclick="exitQuiz()">我不玩了</button>
+        </div>
+        <p id="feedback"></p>
+    </div>
+
+    <script>
+        let shapes = ["triangle", "rectangle", "square", "trapezoid"];
+        let correctAnswer = 0;
+        let attempts = 0;
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateQuestion() {
+            attempts = 0;
+            let shape = shapes[getRandomInt(0, shapes.length - 1)];
+            let base = getRandomInt(1, 10);
+            let height = getRandomInt(1, 10);
+            let questionText = "";
+
+            switch (shape) {
+                case "triangle":
+                    correctAnswer = 0.5 * base * height;
+                    questionText = `一個三角形的底為 ${base}，高為 ${height}。請問它的面積是多少？`;
+                    break;
+                case "rectangle":
+                    correctAnswer = base * height;
+                    questionText = `一個矩形的底為 ${base}，高為 ${height}。請問它的面積是多少？`;
+                    break;
+                case "square":
+                    correctAnswer = base * base;
+                    questionText = `一個正方形的邊長為 ${base}。請問它的面積是多少？`;
+                    break;
+                case "trapezoid":
+                    let topBase = getRandomInt(1, 10);
+                    correctAnswer = 0.5 * (base + topBase) * height;
+                    questionText = `一個梯形的上底為 ${topBase}，下底為 ${base}，高為 ${height}。請問它的面積是多少？`;
+                    break;
+            }
+
+            document.getElementById("question").innerHTML = `<p>${questionText}</p>`;
+            document.getElementById("feedback").innerText = "";
+            document.getElementById("answer").value = "";
+        }
+
+        function checkAnswer() {
+            let userAnswer = parseFloat(document.getElementById("answer").value);
+
+            if (isNaN(userAnswer)) {
+                document.getElementById("feedback").innerText = "請輸入有效的數字！";
+                return;
+            }
+
+            if (Math.abs(userAnswer - correctAnswer) < 0.01) {
+                document.getElementById("feedback").innerText = "答對了！你好棒棒！";
+            } else {
+                attempts++;
+                if (attempts === 1) {
+                    document.getElementById("feedback").innerText = "不對喔～再想想！";
+                } else {
+                    document.getElementById("feedback").innerText = `不對喔～答案是 ${correctAnswer.toFixed(2)}。`;
+                }
+            }
+        }
+
+        function nextQuestion() {
+            generateQuestion();
+        }
+
+        function exitQuiz() {
+            document.getElementById("quiz-container").innerHTML = "謝謝參加！再見！";
+        }
+
+        // Initialize the first question
+        generateQuestion();
+    </script>
+</body>
+</html>
